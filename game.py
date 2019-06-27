@@ -1,36 +1,11 @@
 from random import randint
 
+from board import Board
 
-def create_board(row, col):
-    board = []
-    for x in range(row):
-        board.append(["O"] * col)
-    return board
-
-
-board = create_board(10, 10)
-
-
-def print_board(board):
-    a = '*  '
-    for i in range(len(board[0])):
-        a += chr(i+65) + ' '
-    print(a)
-    s = '*+'
-    for i in range(len(board[0])):
-        s += '--'
-    print(s)
-    j = 1
-    for row in board:
-        if j < 10:
-            print(str(j) + ' |' + " ".join(row))
-        else:
-            print(str(j) + '|' + " ".join(row))
-        j += 1
-
+board = Board(10)
 
 print("Let's play Battleships!")
-print_board(board)
+board.print()
 
 
 def random_row(board):
@@ -41,8 +16,8 @@ def random_col(board):
     return randint(0, len(board[0]) - 1)
 
 
-ship_row = random_row(board)
-ship_col = random_col(board)
+ship_row = random_row(board.fields)
+ship_col = random_col(board.fields)
 print(ship_row)
 print(ship_col)
 
@@ -57,13 +32,13 @@ for turn in range(turns):
         print("Congratulations! You sunk my battleship!")
         break
     else:
-        if (guess_row < 0 or guess_row >= len(board) or guess_col < 0 or guess_col >= len(board[0])):
+        if (guess_row < 0 or guess_row >= len(board.fields) or guess_col < 0 or guess_col >= len(board.fields[0])):
             print("Oops, that's not even in the ocean.")
-        elif(board[guess_row][guess_col] == "X"):
+        elif(board.fields[guess_row][guess_col] == "X"):
             print("You guessed that one already.")
         else:
             print("You missed my battleship!")
-            board[guess_row][guess_col] = "X"
+            board.fields[guess_row][guess_col] = "X"
         if turn == turns-1:
             print("Game Over.")
-        print_board(board)
+        board.print()
