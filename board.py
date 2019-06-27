@@ -20,7 +20,14 @@ class Board:
     def __init__(self, size: int):
         self.size = size
         self.fields: List[List[Field]] = [
-            [Field()] * size for x in range(size)]
+            [Field() for _ in range(size)]
+            for _ in range(size)
+        ]
+
+    def shoot(self, x: int, y: int) -> bool:
+        field = self.fields[x][y]
+        field.hit = True
+        return field.has_ship
 
     def print(self):
         a = '     '

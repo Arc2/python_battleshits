@@ -1,4 +1,5 @@
 from random import randint
+from typing import Tuple
 
 from board import Board
 
@@ -8,37 +9,52 @@ print("Let's play Battleships!")
 board.print()
 
 
-def random_row(board):
-    return randint(0, len(board) - 1)
+class Player:
+    def __init__(self, id_):
+        self.id = id_
+        self.board = Board(10)
+
+    def get_ships_locations(self) -> Board:
+        board = Board(10)
+        ships_locations = (
+            (1, 1), (2, 1),
+            (2, 3),
+            (8, 1),
+            (4, 3), (4, 4),
+            (6, 2), (6, 3), (6, 4),
+            (4, 7), (5, 7), (6, 7), (7, 7),
+            (1, 9), (2, 9), (3, 9), (4, 9), (5, 9)
+        )
+        for location in ships_locations:
+            board.fields[location[0]][location[1]].has_ship = True
+        return board
+
+    def get_shot_location(self) -> Tuple[int, int]:
+        return randint(0, 9), randint(0, 9)
 
 
-def random_col(board):
-    return randint(0, len(board[0]) - 1)
+player1 = Player(1)
+player2 = Player(2)
+player1.board = player1.get_ships_locations()
+player2.board = player2.get_ships_locations()
 
-
-ship_row = random_row(board.fields)
-ship_col = random_col(board.fields)
-print(ship_row)
-print(ship_col)
-
-turns = 8
-
-for turn in range(turns):
-    print("Turn", turn+1)
-    guess_row = int(input("Guess Row:"))-1
-    guess_col = ord(input("Guess Col:"))-65
-
-    if guess_row == ship_row and guess_col == ship_col:
-        print("Congratulations! You sunk my battleship!")
-        break
+turn = 0
+while True:
+    turn += 1
+    print(f"Turn {turn}")
+    if turn % 10 == 0:
+        print('Player 1 board:')
+        player1.board.print()
+        print()
+        print('Player 2 board:')
+        player2.board.print()
+    if turn % 2 == 0:
+        coords = player1.get_shot_location()
+        player2.board.shoot(*coords)
+        print(f'Player 1 shot {coords}')
+        input()
     else:
-        if (guess_row < 0 or guess_row >= len(board.fields) or guess_col < 0 or guess_col >= len(board.fields[0])):
-            print("Oops, that's not even in the ocean.")
-        elif(board.fields[guess_row][guess_col] == "X"):
-            print("You guessed that one already.")
-        else:
-            print("You missed my battleship!")
-            board.fields[guess_row][guess_col] = "X"
-        if turn == turns-1:
-            print("Game Over.")
-        board.print()
+        coords = player2.get_shot_location()
+        player1.board.shoot(*coords)
+        print(f'Player 2 shot {coords}')
+        input()
