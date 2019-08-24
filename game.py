@@ -6,7 +6,7 @@ from board import Board
 board = Board(10)
 
 print("Let's play Battleships!")
-board.print()
+board.print_with_fog()
 
 
 class Player:
@@ -43,11 +43,11 @@ while True:
     turn += 1
     print(f"Turn {turn}")
     if turn % 10 == 0:
-        print('Player 1 board:')
+        print('Player 1 board as seen by Player 1:')
         player1.board.print()
         print()
-        print('Player 2 board:')
-        player2.board.print()
+        print('Player 2 board as seen by Player 1:')
+        player2.board.print_with_fog()
     if turn % 2 == 0:
         coords = player1.get_shot_location()
         player2.board.shoot(*coords)

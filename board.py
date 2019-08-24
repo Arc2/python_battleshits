@@ -9,9 +9,17 @@ class Field:
     has_ship: bool = False
     can_have_ship: bool = True
 
-    def __str__(self):
+    def get_with_fog(self):
         if self.hit:
             return '*' if self.has_ship else 'X'
+        else:
+            return 'O'
+
+    def get_private(self):
+        if self.hit:
+            return '*' if self.has_ship else 'X'
+        elif self.has_ship:
+            return 'S'
         else:
             return 'O'
 
@@ -29,6 +37,23 @@ class Board:
         field.hit = True
         return field.has_ship
 
+    def print_with_fog(self):
+        a = '     '
+        for i in range(self.size):
+            a += f'{chr(i+65)} '
+        print(a)
+        s = '   +'
+        for i in range(self.size):
+            s += '--'
+        print(s)
+        j = 1
+        for row in self.fields:
+            if j < 10:
+                print(f'{str(j)}  | {" ".join((x.get_with_fog() for x in row))}')
+            else:
+                print(f'{str(j)} | {" ".join((x.get_with_fog() for x in row))}')
+            j += 1
+
     def print(self):
         a = '     '
         for i in range(self.size):
@@ -41,7 +66,7 @@ class Board:
         j = 1
         for row in self.fields:
             if j < 10:
-                print(f'{str(j)}  | {" ".join((str(x) for x in row))}')
+                print(f'{str(j)}  | {" ".join((x.get_private() for x in row))}')
             else:
-                print(f'{str(j)} | {" ".join((str(x) for x in row))}')
+                print(f'{str(j)} | {" ".join((x.get_private() for x in row))}')
             j += 1
